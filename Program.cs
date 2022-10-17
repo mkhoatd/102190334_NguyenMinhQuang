@@ -10,6 +10,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var sv = scope.ServiceProvider;
+    try
+    {
+        var context = sv.GetRequiredService<AppDbContext>();
+        await context.Database.MigrateAsync();
+    }
+    catch (Exception e)
+    {
+        var logger = sv.GetRequiredService<ILogger<Program>>();
+        logger.LogError(e, "An error occurred while migrating or seeding the database.");
+    }
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
