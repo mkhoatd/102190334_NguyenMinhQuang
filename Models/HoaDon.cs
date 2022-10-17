@@ -9,4 +9,5 @@ public class HoaDon
     public string NgayTao { get; set; }
     public string HinhAnh { get; set; }
     public int LoaiHoaDonId { get; set; }
+    public LoaiHoaDon LoaiHoaDon { get; set; }
 }

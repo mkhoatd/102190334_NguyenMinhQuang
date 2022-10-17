@@ -1,7 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using _102190334_NguyenMinhQuang.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace _102190334_NguyenMinhQuang.Controllers
 {
@@ -14,42 +18,42 @@ namespace _102190334_NguyenMinhQuang.Controllers
             _context = context;
         }
 
+        // GET: HoaDon
         public record SearchInfo(int? Id, string? Name, string? Email, int? LoaiHoaDonId);
 
         // GET: HoaDon
         public async Task<IActionResult> Index(SearchInfo info)
         {
-              // return _context.HoaDons != null ? 
-              //             View(await _context.HoaDons.ToListAsync()) :
-              //             Problem("Entity set 'AppDbContext.HoaDons'  is null.");
-              var res = await _context.HoaDons.Where(h => info.Id == null || h.Id == info.Id)
-                  .Where(h => info.Name == null || h.Ten.Contains(info.Name))
-                  .Where(h => info.Email == null || h.EmailKhachHang.Contains(info.Email))
-                  .Where(h => info.LoaiHoaDonId == -1 || info.LoaiHoaDonId == null || h.LoaiHoaDonId == info.LoaiHoaDonId)
-                  .ToListAsync();
-              var loaiHoaDons = await _context.LoaiHoaDons.ToListAsync();
-              var loaiHoaDonsData = new List<SelectListItem>
-              {
-                  new SelectListItem
-                  {
-                      Text = "Tất cả",
-                      Value = "-1",
-                      Selected = true
-                  }
-              };
-              foreach (var loaiHoaDon in loaiHoaDons)
-              {
-                  loaiHoaDonsData.Add(new SelectListItem
-                  {
-                      Text=loaiHoaDon.Ten,
-                      Value = loaiHoaDon.Id.ToString()
-                  });
-              }
+            // return _context.HoaDons != null ? 
+            //             View(await _context.HoaDons.ToListAsync()) :
+            //             Problem("Entity set 'AppDbContext.HoaDons'  is null.");
+            var res = await _context.HoaDons.Where(h => info.Id == null || h.Id == info.Id)
+                .Where(h => info.Name == null || h.Ten.Contains(info.Name))
+                .Where(h => info.Email == null || h.EmailKhachHang.Contains(info.Email))
+                .Where(h => info.LoaiHoaDonId == -1 || info.LoaiHoaDonId == null || h.LoaiHoaDonId == info.LoaiHoaDonId)
+                .ToListAsync();
+            var loaiHoaDons = await _context.LoaiHoaDons.ToListAsync();
+            var loaiHoaDonsData = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Tất cả",
+                    Value = "-1",
+                    Selected = true
+                }
+            };
+            foreach (var loaiHoaDon in loaiHoaDons)
+            {
+                loaiHoaDonsData.Add(new SelectListItem
+                {
+                    Text=loaiHoaDon.Ten,
+                    Value = loaiHoaDon.Id.ToString()
+                });
+            }
 
-              ViewBag.LoaiHoaDonsData = loaiHoaDonsData;
-              return View(res);
+            ViewBag.LoaiHoaDonsData = loaiHoaDonsData;
+            return View(res);
         }
-
         // GET: HoaDon/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -59,6 +63,7 @@ namespace _102190334_NguyenMinhQuang.Controllers
             }
 
             var hoaDon = await _context.HoaDons
+                .Include(h => h.LoaiHoaDon)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hoaDon == null)
             {
@@ -71,6 +76,7 @@ namespace _102190334_NguyenMinhQuang.Controllers
         // GET: HoaDon/Create
         public IActionResult Create()
         {
+            ViewData["LoaiHoaDonId"] = new SelectList(_context.LoaiHoaDons, "Id", "Id");
             return View();
         }
 
@@ -87,6 +93,7 @@ namespace _102190334_NguyenMinhQuang.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["LoaiHoaDonId"] = new SelectList(_context.LoaiHoaDons, "Id", "Id", hoaDon.LoaiHoaDonId);
             return View(hoaDon);
         }
 
@@ -103,6 +110,7 @@ namespace _102190334_NguyenMinhQuang.Controllers
             {
                 return NotFound();
             }
+            ViewData["LoaiHoaDonId"] = new SelectList(_context.LoaiHoaDons, "Id", "Id", hoaDon.LoaiHoaDonId);
             return View(hoaDon);
         }
 
@@ -138,6 +146,7 @@ namespace _102190334_NguyenMinhQuang.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["LoaiHoaDonId"] = new SelectList(_context.LoaiHoaDons, "Id", "Id", hoaDon.LoaiHoaDonId);
             return View(hoaDon);
         }
 
@@ -150,6 +159,7 @@ namespace _102190334_NguyenMinhQuang.Controllers
             }
 
             var hoaDon = await _context.HoaDons
+                .Include(h => h.LoaiHoaDon)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (hoaDon == null)
             {

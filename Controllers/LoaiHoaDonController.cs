@@ -55,7 +55,7 @@ namespace _102190334_NguyenMinhQuang.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Ten")] LoaiHoaDon loaiHoaDon)
+        public async Task<IActionResult> Create([Bind("Ten")] LoaiHoaDon loaiHoaDon)
         {
             if (ModelState.IsValid)
             {
