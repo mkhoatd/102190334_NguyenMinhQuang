@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _102190334_NguyenMinhQuang.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace _102190334_NguyenMinhQuang.Controllers
 {
@@ -13,12 +14,40 @@ namespace _102190334_NguyenMinhQuang.Controllers
             _context = context;
         }
 
+        public record SearchInfo(int? Id, string? Name, string? Email, int? LoaiHoaDonId);
+
         // GET: HoaDon
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SearchInfo info)
         {
-              return _context.HoaDons != null ? 
-                          View(await _context.HoaDons.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.HoaDons'  is null.");
+              // return _context.HoaDons != null ? 
+              //             View(await _context.HoaDons.ToListAsync()) :
+              //             Problem("Entity set 'AppDbContext.HoaDons'  is null.");
+              var res = await _context.HoaDons.Where(h => info.Id == null || h.Id == info.Id)
+                  .Where(h => info.Name == null || h.Ten.Contains(info.Name))
+                  .Where(h => info.Email == null || h.EmailKhachHang.Contains(info.Email))
+                  .Where(h => info.LoaiHoaDonId == -1 || info.LoaiHoaDonId == null || h.LoaiHoaDonId == info.LoaiHoaDonId)
+                  .ToListAsync();
+              var loaiHoaDons = await _context.LoaiHoaDons.ToListAsync();
+              var loaiHoaDonsData = new List<SelectListItem>
+              {
+                  new SelectListItem
+                  {
+                      Text = "Tất cả",
+                      Value = "-1",
+                      Selected = true
+                  }
+              };
+              foreach (var loaiHoaDon in loaiHoaDons)
+              {
+                  loaiHoaDonsData.Add(new SelectListItem
+                  {
+                      Text=loaiHoaDon.Ten,
+                      Value = loaiHoaDon.Id.ToString()
+                  });
+              }
+
+              ViewBag.LoaiHoaDonsData = loaiHoaDonsData;
+              return View(res);
         }
 
         // GET: HoaDon/Details/5

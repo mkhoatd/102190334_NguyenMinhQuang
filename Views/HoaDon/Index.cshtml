@@ -10,6 +10,16 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-controller="HoaDon" asp-action="Index" method="get">
+    <p>
+        Id: <input type="text" name="Id" />
+        Ten: <input type="text" name="Name"/>
+        Email: <input type="text" name="Email"/>
+        <select asp-items="ViewBag.LoaiHoaDonsData" class="form-control" name="LoaiHoaDonId" id="LoaiHoaDonId"></select>
+        <input type="submit" value="Filter" />
+    </p>
+</form>
 <table class="table">
     <thead>
         <tr>
