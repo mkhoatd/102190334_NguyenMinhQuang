@@ -17,11 +17,21 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="6.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\HoaDon\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\HoaDon\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\HoaDon\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\HoaDon\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\HoaDon\Index.cshtml" />
   </ItemGroup>
 
 </Project>
